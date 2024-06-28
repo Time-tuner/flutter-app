@@ -7,9 +7,11 @@ environment:
   sdk: '>=3.3.4 <4.0.0'
 
 dependencies:
-  firebase_auth: ^4.19.4
+  credential_manager: ^1.0.2
+  firebase_auth: ^5.1.0
   flutter:
     sdk: flutter
+  google_sign_in: ^6.2.1
   sign_in_button: ^3.2.0
   terminal_color_parser: ^0.6.0
 
