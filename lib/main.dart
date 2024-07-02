@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'firebase_options.dart';
 import '../screens/login.dart';
 import '../screens/kidou.dart';
+import '../screens/sleepApplication.dart';
 
 void main() {
   runApp(const MainApp());
@@ -15,7 +16,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'JboyApp',
-      home: KidouPage(),
+      home: KidouPage(), //Kidou.pageに置き換えてからコミット
     );
   }
 }
