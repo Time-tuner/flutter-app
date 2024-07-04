@@ -107,28 +107,28 @@ class _LoginPageState extends State<LoginPage> {
                 height: 50,
                 child: ElevatedButton(
                   onPressed: () {
-                    //ボタンが押されたときの処理
+                      //ボタンが押されたときの処理
                   },
                   style: ElevatedButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    foregroundColor: Colors.white, backgroundColor: Color(0xFF4cc764),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
-                    ),
+                  padding: EdgeInsets.zero,
+                  foregroundColor: Colors.white, backgroundColor: Color(0xFF4cc764),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Row(
-                    children: [
-                      Positioned.fill(
-                        child: Material(
-                          color: Colors.transparent,
+                ),
+                child: Row(
+                  children: [
+                    Positioned.fill(
+                      child: Material(
+                        color: Colors.transparent,
                           child: InkWell(
-                            onTap: (){
-                              //ボタンが押されたときの処理
+                           onTap: (){
+                            //ボタンが押されたときの処理
                             },
-                          child: Image.asset(
-                        'images/line_logo.png', // Lineのロゴ画像をassetsフォルダに追加してください
-                        fit: BoxFit.contain,
-                      ),
+                            child: Image.asset(
+                              'images/line_logo.png', // Lineのロゴ画像をassetsフォルダに追加してください
+                              fit: BoxFit.contain,
+                            ),
                           ),
                         ),
                       ),
