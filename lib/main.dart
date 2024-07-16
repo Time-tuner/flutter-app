@@ -1,11 +1,9 @@
 import 'dart:math';
-import 'package:flutter/animation.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_colorpicker/flutter_colorpicker.dart';
+import 'package:flutter/material.dart';
+import 'package:time_tuner/screens/schedule_add_screen.dart'; // 新しいファイルをインポート
+import 'dart:ui' as ui;
 
-// 予定データのモデル
 class Schedule {
   final String title;
   final DateTime startTime;
@@ -24,7 +22,6 @@ void main() {
   runApp(MyApp());
 }
 
-// アプリ全体のウィジェット
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -38,7 +35,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-// ホーム画面
 class HomeScreen extends StatefulWidget {
   @override
   _HomeScreenState createState() => _HomeScreenState();
@@ -48,7 +44,7 @@ class _HomeScreenState extends State<HomeScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   late Animation<double> _animation;
-  List<Schedule> _schedules = []; // 予定のリスト
+  List<Schedule> _schedules = [];
 
   double _calculateAngleFromTime(DateTime time) {
     final hour = time.hour;
@@ -60,7 +56,7 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(hours: 12), // 12時間のアニメーション
+      duration: const Duration(hours: 24),
       vsync: this,
     );
 
@@ -70,9 +66,9 @@ class _HomeScreenState extends State<HomeScreen>
     _animation = Tween<double>(begin: currentAngle, end: currentAngle + 360)
         .animate(_controller)
       ..addListener(() {
-        setState(() {}); // アニメーションに合わせて状態を更新
+        setState(() {});
       });
-    _controller.repeat(); // アニメーションを繰り返す
+    _controller.forward();
   }
 
   @override
@@ -83,230 +79,306 @@ class _HomeScreenState extends State<HomeScreen>
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Timetuner'),
-          backgroundColor: Colors.cyan,
-          leading: Builder(
-            builder: (BuildContext context) {
-              return IconButton(
-                icon: const Icon(Icons.menu , color: Colors.white,),
-                onPressed: () {
-                  Scaffold.of(context).openDrawer();
-                },
-              );
-            },
-          ),
-        ),
-        drawer: Drawer(
-          child: ListView(
-            padding: EdgeInsets.zero,
-            children: <Widget>[
-              DrawerHeader(
-                decoration: BoxDecoration(
-                  color: const Color.fromARGB(255, 181, 255, 96),
-                ),
-                child: Text('Timetuner',
-                    style: TextStyle(color: Colors.black, fontSize: 24)),
-              ),
-              ListTile(
-                leading: Icon(Icons.home),
-                title: Text('ホーム'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.calendar_today),
-                title: Text('カレンダー'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.bar_chart),
-                title: Text('推移'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.emoji_events),
-                title: Text('実績'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.settings),
-                title: Text('モード設定'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.help),
-                title: Text('ヘルプ'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-              ListTile(
-                leading: Icon(Icons.settings),
-                title: Text('設定'),
-                onTap: () {
-                  Navigator.pop(context);
-                },
-              ),
-            ],
-          ),
-        ),
-        body: Center(
-          child: Column(
-            children: [
-              Container(
-                color: Colors.cyan,
-                height: 150,
-                child: Center(
-                  child: Text(
-                    '終日の予定がここに表示されます',
-                    style: TextStyle(fontSize: 18, color: Colors.black),
-                  ),
-                ),
-              ),
-              Expanded(
-                child: GestureDetector(
-                  onTap: () {
-                    // 予定追加画面への遷移
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ScheduleAddScreen(
-                          onScheduleAdded: (schedule) {
-                            setState(() {
-                              _schedules.add(schedule);
-                            });
-                          },
-                        ),
-                      ),
-                    );
-                  },
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      CustomPaint(
-                        size: Size(300, 300), // 円のサイズ
-                        painter:
-                            ClockPainter(_animation.value, _schedules), // 時計の描画
-                      ),
-                      // キャラクターの描画
-                      AnimatedBuilder(
-                        animation: _animation,
-                        builder: (context, child) {
-                          final needleEnd = Offset(
-                            150 + 150 * cos((_animation.value +20) * pi / 180 ),
-                            150 + 150 * sin((_animation.value ) * pi / 180 ),
-                          );
+    final screenSize = MediaQuery.of(context).size;
+    final circleDiameter = screenSize.width * 0.85;
+    final circleRadius = circleDiameter / 2;
+    final barColor = Color.fromRGBO(0, 146, 172, 1); // 上のバーの色
 
-                          final screenSize = MediaQuery.of(context).size;
-                          final circleOffsetX = screenSize.width / 2 - 150;
-                          final circleOffsetY =
-                              screenSize.height / 2 - 150 - 150;
-                          return Positioned(
-                            left: circleOffsetX +
-                                needleEnd.dx -15
-                                , // needleEnd.dx を使う
-                            top: circleOffsetY +
-                                needleEnd.dy -
-                                10, // needleEnd.dy を使う
-                            child: Transform.rotate(
-                              angle: _animation.value * pi / 180 - pi / 2,
-                              child: Image.asset(
-                                'assets/futaba.png',
-                                width: 40,
-                                height: 40,
-                              ),
-                            ),
-                          );
-                        },
-                      ),
-                    ],
+    return Scaffold(
+      appBar: AppBar(
+        toolbarHeight: 200,
+        leadingWidth: screenSize.width,
+        backgroundColor: barColor,
+        leading: Builder(
+          builder: (BuildContext context) {
+            return Stack(
+              children: [
+                IconButton(
+                  padding: EdgeInsets.all(20),
+                  icon: const Icon(Icons.menu, size: 40, color: Colors.white),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
+                  },
+                ),
+                Positioned(
+                  left: 200,
+                  top: -50,
+                  child: Image.asset(
+                    'assets/cloud2.png',
+                    width: 250, // 雲の画像のサイズをさらに大きく
+                    height: 250,
                   ),
                 ),
+              ],
+            );
+          },
+        ),
+      ),
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: <Widget>[
+            DrawerHeader(
+              margin: EdgeInsets.zero,
+              decoration: BoxDecoration(
+                color: const Color.fromRGBO(222, 240, 221, 1),
               ),
-            ],
-          ),
-        ));
+              child: Text(
+                'Timetuner',
+                style: TextStyle(color: Colors.black, fontSize: 24),
+              ),
+            ),
+            ListTile(
+              tileColor: Color.fromRGBO(222, 240, 221, 1),
+              leading: Icon(Icons.home),
+              title: Text('ホーム'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.calendar_today),
+              title: Text('カレンダー'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.bar_chart),
+              title: Text('推移'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.emoji_events),
+              title: Text('実績'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('モード設定'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.help),
+              title: Text('ヘルプ'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+            ListTile(
+              leading: Icon(Icons.settings),
+              title: Text('設定'),
+              onTap: () {
+                Navigator.pop(context);
+              },
+            ),
+          ],
+        ),
+      ),
+      body: Container(
+        color: barColor,
+        child: Stack(
+          children: [
+            Center(
+              child: Column(
+                children: [
+                  Container(
+                    color: barColor,
+                    height: 80,
+                    child: Center(
+                      child: Text(
+                        _schedules.isNotEmpty
+                            ? _schedules.map((e) => '${e.title}').join('\n')
+                            : '',
+                        style: TextStyle(fontSize: 18, color: Colors.white),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ScheduleAddScreen(
+                            onScheduleAdded: (schedule) {
+                              setState(() {
+                                _schedules.add(schedule);
+                                _schedules.sort((a, b) =>
+                                    a.startTime.compareTo(b.startTime));
+                              });
+                            },
+                          ),
+                        ),
+                      ).then((_) => setState(() {}));
+                    },
+                    child: Container(
+                      color: Colors.white,
+                      width: screenSize.width,
+                      height: screenSize.height * 0.48,
+                      child: Stack(
+                        alignment: Alignment.center,
+                        children: [
+                          CustomPaint(
+                            size: Size(circleDiameter, circleDiameter),
+                            painter: ClockPainter(
+                                _animation.value, _schedules, circleRadius),
+                          ),
+                          AnimatedBuilder(
+                            animation: _animation,
+                            builder: (context, child) {
+                              final characterAngle =
+                                  360 - ((_animation.value + 90) % 360) + 5;
+
+                              final characterPosition = Offset(
+                                screenSize.width / 2 -
+                                    (circleRadius * 0.93) *
+                                        cos(characterAngle * pi / 180),
+                                screenSize.height * 0.48 / 2 +
+                                    (circleRadius * 0.93) *
+                                        sin(characterAngle * pi / 180),
+                              );
+
+                              return Positioned(
+                                left: characterPosition.dx - 20,
+                                top: characterPosition.dy - 20,
+                                child: Transform.rotate(
+                                  angle: (_animation.value - 180) * pi / 180,
+                                  child: Image.asset(
+                                    'assets/futaba.png',
+                                    width: 40,
+                                    height: 40,
+                                  ),
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
 
-// 時計の描画クラス
 class ClockPainter extends CustomPainter {
   final double angle;
   final List<Schedule> schedules;
+  final double radius;
 
-  ClockPainter(this.angle, this.schedules);
+  ClockPainter(this.angle, this.schedules, this.radius);
 
   @override
   void paint(Canvas canvas, Size size) {
-    // 円の描画
-    final paint = Paint()
-      ..color = Colors.grey[300]!
-      ..style = PaintingStyle.fill;
-    canvas.drawCircle(
-        Offset(size.width / 2, size.height / 2), size.width / 2, paint);
-
-    // 時計の針の描画
     final center = Offset(size.width / 2, size.height / 2);
-    final radius = size.width / 2 -5 ; // 針の長さ
-    final angleRadians = angle * (pi / 180); // 度からラジアンに変換
-    final needleEnd = Offset(
-      center.dx + radius * cos(angleRadians),
-      center.dy + radius * sin(angleRadians),
+
+    canvas.drawCircle(
+      center,
+      radius,
+      Paint()
+        ..color = Colors.grey[300]!
+        ..style = PaintingStyle.fill,
     );
-    canvas.drawLine(center, needleEnd, Paint()..color = Colors.brown);
 
-    // キャラクターの描画
-    // final characterImage =
-    // final characterSize = 30.0;
-    // final characterRect = Rect.fromCenter(
-    //   center: needleEnd,
-    //   width: characterSize,
-    //   height: characterSize,
-    // );
-    // paintImage(
-    //   canvas: canvas,
-    //   image: characterImage,
-    //   rect: characterRect,
-    //   fit: BoxFit.cover,
-    // );
+    final hourAngle = 360 / 24;
+    for (int i = 0; i < 24; i++) {
+      final tickAngle = i * hourAngle;
+      final tickLength = i % 6 == 0 ? 15.0 : 8.0;
 
-    // 予定部分の描画
+      canvas.drawLine(
+        _calculatePointOnCircle(center, radius - tickLength, tickAngle),
+        _calculatePointOnCircle(center, radius, tickAngle),
+        Paint()..color = Colors.black,
+      );
+
+      if (i % 6 == 0) {
+        final textPainter = TextPainter(
+          text: TextSpan(
+            text: '$i',
+            style: TextStyle(color: Colors.black, fontSize: 18),
+          ),
+          textDirection: ui.TextDirection.ltr,
+        );
+        textPainter.layout();
+
+        final textOffset =
+            _calculatePointOnCircle(center, radius + 12, tickAngle - 90);
+        textPainter.paint(
+            canvas,
+            Offset(textOffset.dx - textPainter.width / 2,
+                textOffset.dy - textPainter.height / 2));
+      }
+    }
+
+    canvas.drawLine(
+      center,
+      _calculatePointOnCircle(center, radius - 5, angle - 90),
+      Paint()..color = Colors.brown,
+    );
+
+    _drawSchedules(canvas, size, center, radius);
+
+    final elapsedPaint = Paint()
+      ..color = Colors.grey.withOpacity(0.3)
+      ..style = PaintingStyle.fill;
+    canvas.drawArc(
+      Rect.fromCircle(center: center, radius: radius),
+      -pi / 2,
+      angle * pi / 180,
+      true,
+      elapsedPaint,
+    );
+  }
+
+  void _drawSchedules(Canvas canvas, Size size, Offset center, double radius) {
     final now = DateTime.now();
-    for (final schedule in schedules) {
-      // 予定時間から角度を計算
+    for (var i = 0; i < schedules.length; i++) {
+      final schedule = schedules[i];
       final startTimeAngle = _calculateAngleFromTime(schedule.startTime);
       final endTimeAngle = _calculateAngleFromTime(schedule.endTime);
-
-      // 予定時間が過去ならグレーアウト処理
       final isPast = now.isAfter(schedule.endTime);
 
-      // 予定時間を塗りつぶす
-      final sweepAngle = endTimeAngle - startTimeAngle;
+      var startAngle = startTimeAngle - 90;
+      var endAngle = endTimeAngle - 90;
+
+      if (endAngle < startAngle) {
+        endAngle += 360;
+      }
+
       final schedulePaint = Paint()
-        ..color = isPast ? Colors.grey : schedule.color
+        ..color = (isPast ? Colors.grey : schedule.color).withOpacity(0.5)
         ..style = PaintingStyle.fill;
+
       canvas.drawArc(
-        Rect.fromCircle(center: center, radius: size.width / 2),
-        startTimeAngle * (pi / 180) - pi / 2,
-        sweepAngle * (pi / 180),
+        Rect.fromCircle(center: center, radius: radius),
+        startAngle * pi / 180,
+        (endAngle - startAngle) * pi / 180,
         true,
         schedulePaint,
       );
     }
   }
 
-  // 時間から角度を計算するヘルパー関数
+  Offset _calculatePointOnCircle(Offset center, double radius, double angle) {
+    final angleInRadians = angle * pi / 180;
+    return Offset(
+      center.dx + radius * cos(angleInRadians),
+      center.dy + radius * sin(angleInRadians),
+    );
+  }
+
   double _calculateAngleFromTime(DateTime time) {
     final hour = time.hour;
     final minute = time.minute;
@@ -317,147 +389,5 @@ class ClockPainter extends CustomPainter {
   bool shouldRepaint(covariant ClockPainter oldDelegate) {
     return oldDelegate.angle != angle ||
         !listEquals(oldDelegate.schedules, schedules);
-  }
-}
-
-// 予定追加画面
-class ScheduleAddScreen extends StatefulWidget {
-  final Function(Schedule) onScheduleAdded; // 予定を追加したときに呼び出す関数
-
-  ScheduleAddScreen({required this.onScheduleAdded});
-
-  @override
-  _ScheduleAddScreenState createState() => _ScheduleAddScreenState();
-}
-
-class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
-  final _formKey = GlobalKey<FormState>(); // フォームのバリデーション用
-  final _titleController = TextEditingController();
-  final _startTimeController = TextEditingController();
-  final _endTimeController = TextEditingController();
-  Color _selectedColor = Colors.blue;
-
-  @override
-  void dispose() {
-    _titleController.dispose();
-    _startTimeController.dispose();
-    _endTimeController.dispose();
-    super.dispose();
-  }
-
-  void _showColorPicker() {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('色を選択'),
-        content: SingleChildScrollView(
-          child: BlockPicker(
-            pickerColor: _selectedColor,
-            onColorChanged: (color) {
-              setState(() {
-                _selectedColor = color;
-              });
-            },
-          ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('予定を追加'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _titleController,
-                decoration: InputDecoration(
-                  labelText: '予定タイトル',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '予定タイトルを入力してください';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16),
-              TextFormField(
-                controller: _startTimeController,
-                decoration: InputDecoration(
-                  labelText: '開始時間 (HH:MM)',
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '開始時間を入力してください';
-                  }
-                  return null;
-                },
-              ),
-              TextFormField(
-                controller: _endTimeController,
-                decoration: InputDecoration(
-                  labelText: '終了時間 (HH:MM)',
-                ),
-                keyboardType: TextInputType.number,
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return '終了時間を入力してください';
-                  }
-                  return null;
-                },
-              ),
-              SizedBox(height: 16),
-              // 色選択のUI (例えば、カラーピッカーなど)
-              ElevatedButton(
-                onPressed: _showColorPicker, // カラーピッカーを表示
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: _selectedColor,
-                ),
-                child: Text('色を選択'),
-              ),
-              SizedBox(height: 32),
-              ElevatedButton(
-                onPressed: () {
-                  if (_formKey.currentState!.validate()) {
-                    // 予定データを作成
-                    final title = _titleController.text;
-                    final startTime = DateTime.parse(
-                        '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} ${_startTimeController.text}');
-                    final endTime = DateTime.parse(
-                        '${DateTime.now().year}-${DateTime.now().month}-${DateTime.now().day} ${_endTimeController.text}');
-                    final schedule = Schedule(
-                      title: title,
-                      startTime: startTime,
-                      endTime: endTime,
-                      color: _selectedColor,
-                    );
-
-                    // 予定を追加して、ホーム画面に戻る
-                    widget.onScheduleAdded(schedule);
-                    Navigator.pop(context);
-                  }
-                },
-                child: Text('予定を追加'),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
   }
 }
