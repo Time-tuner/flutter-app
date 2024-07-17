@@ -132,6 +132,7 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
                           _selectedDate.day, 23, 59)
                       : endTime,
                   color: _selectedColor,
+                  isAllDay: _allDay,
                 );
 
                 widget.onScheduleAdded(schedule);

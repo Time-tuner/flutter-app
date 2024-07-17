@@ -9,12 +9,14 @@ class Schedule {
   final DateTime startTime;
   final DateTime endTime;
   final Color color;
+  final bool isAllDay;
 
   Schedule({
     required this.title,
     required this.startTime,
     required this.endTime,
     required this.color,
+    this.isAllDay = false,
   });
 }
 
@@ -68,6 +70,10 @@ class _HomeScreenState extends State<HomeScreen>
     final circleDiameter = screenSize.width * 0.85;
     final circleRadius = circleDiameter / 2;
     final barColor = Color.fromRGBO(0, 146, 172, 1); // 上のバーの色
+
+
+    final allDaySchedules = _schedules.where((s) => s.isAllDay).toList();
+    final timedSchedules = _schedules.where((s) => !s.isAllDay).toList();
 
     return Scaffold(
       appBar: AppBar(
@@ -178,10 +184,10 @@ class _HomeScreenState extends State<HomeScreen>
                     height: 80,
                     child: Center(
                       child: Text(
-                        _schedules.isNotEmpty
-                            ? _schedules.map((e) => '${e.title}').join('\n')
+                        allDaySchedules.isNotEmpty
+                            ? allDaySchedules.map((e) => '${e.title}').join('\n')
                             : '',
-                        style: TextStyle(fontSize: 18, color: Colors.white),
+                        style: TextStyle(fontSize: 32, color: Colors.white),
                         textAlign: TextAlign.center,
                       ),
                     ),
@@ -224,7 +230,7 @@ class _HomeScreenState extends State<HomeScreen>
                           CustomPaint(
                             size: Size(circleDiameter, circleDiameter),
                             painter: ClockPainter(
-                                _animation.value, _schedules, circleRadius),
+                                _animation.value, timedSchedules, circleRadius),
                           ),
                           AnimatedBuilder(
                             animation: _animation,
@@ -341,7 +347,14 @@ class ClockPainter extends CustomPainter {
   void _drawSchedules(Canvas canvas, Size size, Offset center, double radius) {
     final now = DateTime.now();
     for (var i = 0; i < schedules.length; i++) {
+
       final schedule = schedules[i];
+
+      if (schedule.isAllDay) {
+        continue;
+      }
+
+
       final startTimeAngle = _calculateAngleFromTime(schedule.startTime);
       final endTimeAngle = _calculateAngleFromTime(schedule.endTime);
       final isPast = now.isAfter(schedule.endTime);
