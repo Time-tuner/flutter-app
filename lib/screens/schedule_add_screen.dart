@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_colorpicker/flutter_colorpicker.dart';
-import 'package:time_tuner/main.dart'; // Scheduleクラスをインポートするためにmain.dartをインポート
 import 'dart:ui'as ui;
+
+import 'package:time_tuner/screens/home.dart';
 
 class ScheduleAddScreen extends StatefulWidget {
   final Function(Schedule) onScheduleAdded;
