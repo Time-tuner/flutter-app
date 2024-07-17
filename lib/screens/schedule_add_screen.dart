@@ -220,6 +220,7 @@ class _ScheduleAddScreenState extends State<ScheduleAddScreen> {
               SizedBox(height: 16),
               Row(
                 children: [
+                  SizedBox(width: 16),
                   Text('カラー'),
                   SizedBox(width: 16),
                   GestureDetector(

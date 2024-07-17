@@ -203,20 +203,27 @@ class _HomeScreenState extends State<HomeScreen>
                   ),
                   GestureDetector(
                     onTap: () {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => ScheduleAddScreen(
-                            onScheduleAdded: (schedule) {
-                              setState(() {
-                                _schedules.add(schedule);
-                                _schedules.sort((a, b) =>
-                                    a.startTime.compareTo(b.startTime));
-                              });
-                            },
-                          ),
-                        ),
-                      ).then((_) => setState(() {}));
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) => Dialog(
+                                insetPadding: EdgeInsets.zero,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(50),
+                                ),
+                                child: Container(
+                                  width: screenSize.width * 0.85,
+                                  height: screenSize.height * 0.6,
+                                  child: ScheduleAddScreen(
+                                    onScheduleAdded: (schedule) {
+                                      setState(() {
+                                        _schedules.add(schedule);
+                                        _schedules.sort((a, b) =>
+                                            a.startTime.compareTo(b.startTime));
+                                      });
+                                    },
+                                  ),
+                                ),
+                              )).then((_) => setState(() {}));
                     },
                     child: Container(
                       color: Colors.white,
