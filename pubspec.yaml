@@ -12,7 +12,9 @@ dependencies:
   flutter:
     sdk: flutter
   google_sign_in: ^6.2.1
+  intl: ^0.19.0
   sign_in_button: ^3.2.0
+  table_calendar: ^3.1.2
   terminal_color_parser: ^0.6.0
 
 dev_dependencies:

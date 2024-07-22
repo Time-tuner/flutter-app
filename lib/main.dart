@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:time_tuner/screens/calendar.dart';
 import 'firebase_options.dart';
 import '../screens/login.dart';
 import '../screens/kidou.dart';
+import '../screens/calendar.dart';
 import '../screens/sleepApplication.dart';
 
 void main() {
@@ -16,7 +18,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'JboyApp',
-      home: KidouPage(), //Kidou.pageに置き換えてからコミット
+      home: Calendar(),
     );
   }
 }
