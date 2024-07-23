@@ -6,6 +6,12 @@ import '../screens/login.dart';
 import '../screens/kidou.dart';
 import '../screens/calendar.dart';
 import '../screens/sleepApplication.dart';
+import '../screens/achivement.dart';
+import '../screens/help.dart';
+import '../screens/notice.dart';
+import '../screens/pass_reset.dart';
+import '../screens/pass.dart';
+import '../screens/setting.dart';
 
 void main() {
   runApp(const MainApp());
@@ -18,7 +24,7 @@ class MainApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'JboyApp',
-      home: Calendar(),
+      home: SleepApp(),
     );
   }
 }
