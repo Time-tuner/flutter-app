@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:time_tuner/screens/home.dart';
 
-
-
 void main() {
   runApp(MyApp());
 }

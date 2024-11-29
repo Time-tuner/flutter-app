@@ -1,7 +1,8 @@
 import 'dart:math';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:time_tuner/screens/schedule_add_screen.dart'; // 新しいファイルをインポート
+import 'package:time_tuner/screens/schedule_add_screen.dart'; 
+import 'package:time_tuner/screens/chart.dart';
 import 'dart:ui' as ui;
 
 class Schedule {
@@ -139,6 +140,12 @@ class _HomeScreenState extends State<HomeScreen>
               title: Text('推移'),
               onTap: () {
                 Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => ChartScreen(schedules: _schedules),
+                  ),
+                );
               },
             ),
             ListTile(
