@@ -9,15 +9,10 @@ class HumburgermenuWidget extends StatelessWidget {
     super.key,
   });
 
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text('Time tuner'),
-      ),
-      drawer: Drawer(
+    return  Drawer(
         elevation: 16.0,
         backgroundColor: Color.fromARGB(255, 193, 249, 227),
         child: Container(
@@ -107,7 +102,4 @@ class HumburgermenuWidget extends StatelessWidget {
             ]
           )
         )
-      )
-    );
-  }
-}
+      );}}
