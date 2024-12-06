@@ -10,6 +10,8 @@ dependencies:
   firebase_auth: ^4.19.4
   flutter:
     sdk: flutter
+  sign_in_button: ^3.2.0
+  terminal_color_parser: ^0.6.0
 
 dev_dependencies:
   flutter_test:
@@ -18,3 +20,8 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+
+  assets:
+    - images/
+
+
