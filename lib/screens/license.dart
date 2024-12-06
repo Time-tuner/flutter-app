@@ -99,7 +99,7 @@ class _licensePageState extends State<licensePage> {
                         )
                       ),
                       padding: EdgeInsets.only(left: 20),
-                      child: Text("利用規約",
+                      child: Text("ライセンス表記",
                           style: TextStyle(fontSize: 25),
                         ),
                     ),

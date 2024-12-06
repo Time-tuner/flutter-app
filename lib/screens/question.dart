@@ -165,7 +165,7 @@ class _QuestionPageState extends State<QuestionPage> {
                                         children: <Widget>[
                                           Container(
                                             height: 50,
-                                            child: Text('たぶん。'),
+                                            child: Text('A.たぶん。'),
                                           ),
                                         ],
                                       ),
