@@ -1,21 +1,22 @@
 import 'dart:ui';
-import 'package:flutter/material.dart'; 
+import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
-import 'package:time_tuner/sub_page.dart';
-import 'package:time_tuner/widgets/humburgermenu_widget.dart';
+//import 'package:time_tuner/main.dart';
+//import 'package:time_tuner/sub_page.dart';
 
-void main() async {
+
+void sub() async {
 WidgetsFlutterBinding.ensureInitialized();
-  runApp(drawer());
+  runApp(drawer2());
 }
 
-class drawer extends StatefulWidget {
-  State<drawer> createState() => _drawerState();
+class drawer2 extends StatefulWidget {
+  State<drawer2> createState() => _drawerState();
 }
 
-class _drawerState extends State<drawer> {
+class _drawerState extends State<drawer2> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,14 +24,13 @@ class _drawerState extends State<drawer> {
       theme: ThemeData(
         useMaterial3: true,
       ),
-      //home: HomeWidget(),
-      //home: HumburgermenuWidget(),
+      home: subpage(),
     );
   }
 }
 
-class HomeWidget extends StatelessWidget {
-  HomeWidget({
+class subpage extends StatelessWidget {
+  subpage({
     super.key,
   });
 
@@ -40,7 +40,7 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
     return Scaffold(
       key: _scaffoldKey,
       appBar: AppBar(
-        title: Text('Time tuner'),
+        title: Text('Time tuner2'),
       ),
       drawer: Drawer(
         elevation: 16.0,
@@ -48,7 +48,6 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
         child: Container(
           child: ListView(
             padding: EdgeInsets.zero,
-          
             children: <Widget>[
               Container(
                 child: Text('Time tuner', style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold)),
@@ -134,7 +133,7 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
             ]
           )
         )
-      ),
+      )
     );
   }
 }

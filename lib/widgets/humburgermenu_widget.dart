@@ -1,54 +1,23 @@
-import 'dart:ui';
-import 'package:flutter/material.dart'; 
-import 'package:flutter/rendering.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter/widgets.dart';
+// 新しくファイルを作成したら、このファイルは削除してください。
+//このディレクトリは、再利用するカスタムウィジェットを格納するためのディレクトリです。
+
+import 'package:flutter/material.dart';
 import 'package:time_tuner/sub_page.dart';
-import 'package:time_tuner/widgets/humburgermenu_widget.dart';
 
-void main() async {
-WidgetsFlutterBinding.ensureInitialized();
-  runApp(drawer());
-}
-
-class drawer extends StatefulWidget {
-  State<drawer> createState() => _drawerState();
-}
-
-class _drawerState extends State<drawer> {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Time tuner',
-      theme: ThemeData(
-        useMaterial3: true,
-      ),
-      //home: HomeWidget(),
-      //home: HumburgermenuWidget(),
-    );
-  }
-}
-
-class HomeWidget extends StatelessWidget {
-  HomeWidget({
+class HumburgermenuWidget extends StatelessWidget {
+  HumburgermenuWidget({
     super.key,
   });
 
-final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
-@override
+  
+  @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: _scaffoldKey,
-      appBar: AppBar(
-        title: Text('Time tuner'),
-      ),
-      drawer: Drawer(
+    return  Drawer(
         elevation: 16.0,
         backgroundColor: Color.fromARGB(255, 193, 249, 227),
         child: Container(
           child: ListView(
             padding: EdgeInsets.zero,
-          
             children: <Widget>[
               Container(
                 child: Text('Time tuner', style: TextStyle(fontSize: 24,fontWeight: FontWeight.bold)),
@@ -127,14 +96,10 @@ final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
                 splashColor: Color.fromRGBO(196, 221, 195, 1),
                 onTap: () {
                   //Navigator.pop(context);
-                  Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>subpage(),)
-                  );
+                  Navigator.pushReplacement(context,MaterialPageRoute(builder: (context)=>subpage(),));
                 },
               ),
             ]
           )
         )
-      ),
-    );
-  }
-}
+      );}}
